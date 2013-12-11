@@ -1,0 +1,198 @@
+/* Copyright 2013 Google Inc.  All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License.  You may obtain a copy
+of the License at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distrib-
+uted under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied.  See the License for
+specific language governing permissions and limitations under the License.
+*/
+
+.cm-tab-panel {
+  background: #fff;
+  width: 306px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: auto;
+  max-height: 98%;
+  overflow-y: hidden;
+  z-index: 1;
+  opacity: 0.90;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.cm-tabbed .cm-map-wrapper {
+  margin-left: 0 !important;
+}
+
+.cm-tabbed.cm-panel-left .cm-searchbox {
+  margin-left: 320px; /* Move the searchbox over to avoid the panel. */
+}
+
+.cm-tab-bar-container {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  background: #f0f0f0;
+  position: relative;
+  z-index: 1;
+}
+
+.cm-tab-bar-buttons {
+  display: inline-block;
+  float: right;
+}
+
+.cm-tab-content {
+  overflow-x: visible;
+  overflow-y: auto;
+  padding: 5px 0 0 5px;
+}
+
+.cm-chevron-up {
+  background:url('chevron_up.png') center no-repeat;
+  width:12px;
+  height:11px;
+  padding: 7px 12px 6px 11px;
+  margin: 5px 0 0 6px;
+  cursor: pointer;
+  border-left: 1px solid #ccc;
+  display: inline-block;
+}
+
+.cm-chevron-down {
+  background:url('chevron_down.png') center no-repeat;
+  width:12px;
+  height:11px;
+  padding: 7px 12px 6px 11px;
+  margin: 5px 0 0 6px;
+  cursor: pointer;
+  border-left: 1px solid #ccc;
+  display: inline-block;
+}
+
+.cm-tab-content-collapsed {
+  display: none;
+}
+
+.cm-tab-panel-below {
+  top: inherit !important;
+  width: inherit !important;
+  right: inherit !important;
+  left: inherit !important;
+  box-shadow: none;
+  position: relative;
+  max-height: none;
+}
+
+.cm-tab-panel-below .cm-tab-container {
+  border-bottom: none;
+  width: 100% !important;
+}
+
+.cm-tabbed.cm-panel-right .cm-my-location-button {
+  margin-right: 317px;
+}
+
+.cm-tabbed.cm-embedded .cm-my-location-button,
+.cm-tabbed.cm-panel-below .cm-my-location-button {
+  margin-right: 5px !important;
+}
+
+.cm-panel-left .cm-tab-panel {
+  float: left;
+  left: 5px;
+}
+
+/*
+ * TODO(romano,rew): Basic rules copied from 
+ * https://code.google.com/p/closure-library/source/browse/closure/goog/css/tab.css
+ * to be replaced with our own rules and merged into main.css.
+ */
+
+.goog-tab {
+  padding: 9px 10px 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.goog-tab-bar {
+  display: inline-block;
+  outline: none;
+}
+
+.goog-tab-bar-top .goog-tab {
+  display: inline-block;
+  float: left;
+  outline: none;
+}
+
+.goog-tab-bar-top:after,
+.goog-tab-bar-bottom:after {
+}
+
+.goog-tab-bar-bottom .goog-tab {
+  margin: 0 16px 1px 0;
+  border-top: 0;
+  float: left;
+  outline: none;
+}
+
+.goog-tab-bar-start .goog-tab {
+  margin: 0 0 4px 1px;
+  border-right: 0;
+}
+
+.goog-tab-bar-end .goog-tab {
+  margin: 0 1px 4px 0;
+  border-left: 0;
+}
+
+/* State: Hover */
+.goog-tab-hover {
+  background: #eee;
+}
+
+/* State: Disabled */
+.goog-tab-disabled {
+  color: #666;
+}
+
+/* State: Selected */
+.goog-tab-selected {
+  text-decoration: none;
+  color: #dd4b39;
+}
+
+.goog-tab-bar-top {
+}
+
+/*
+ * Shift selected tabs 1px towards the contents (and compensate via margin and
+ * padding) to visually merge the borders of the tab with the borders of the
+ * content area.
+ */
+.goog-tab-bar-top .goog-tab-selected {
+  margin-top: 0;
+}
+
+.goog-tab-bar-bottom .goog-tab-selected {
+  margin-bottom: 0;
+  padding-top: 5px;
+}
+
+.goog-tab-bar-start .goog-tab-selected {
+  left: 1px;
+  margin-left: 0;
+  padding-right: 9px;
+}
+
+.goog-tab-bar-end .goog-tab-selected {
+  left: -1px;
+  margin-right: 0;
+  padding-left: 9px;
+}

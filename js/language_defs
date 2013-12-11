@@ -1,0 +1,81 @@
+# Copyright 2012 Google Inc.  All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License.  You may obtain a copy
+# of the License at: http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distrib-
+# uted under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+# OR CONDITIONS OF ANY KIND, either express or implied.  See the License for
+# specific language governing permissions and limitations under the License.
+
+XTB_LANGUAGES = [
+  "af",
+  "am",
+  "ar",
+  "bg",
+  "bn",
+  "ca",
+  "cs",
+  "da",
+  "de",
+  "el",
+  "en-GB",
+  "es",
+  "es-419",
+  "es-MX",
+  "et",
+  "eu",
+  "fa",
+  "fi",
+  "fil",
+  "fr",
+  "fr-CA",
+  "gl",
+  "gu",
+  "hi",
+  "hr",
+  "hu",
+  "id",
+  "is",
+  "it",
+  "iw",
+  "ja",
+  "km",
+  "kn",
+  "ko",
+  "lo",
+  "lt",
+  "lv",
+  "ml",
+  "mr",
+  "ms",
+  "my",
+  "ne",
+  "nl",
+  "no",
+  "pl",
+  "pt-BR",
+  "pt-PT",
+  "ro",
+  "ru",
+  "si",
+  "sk",
+  "sl",
+  "sr",
+  "sv",
+  "sw",
+  "ta",
+  "te",
+  "th",
+  "tr",
+  "uk",
+  "ur",
+  "vi",
+  "zh-CN",
+  "zh-HK",
+  "zh-TW",
+  "zu",
+]
+
+ALL_LANGUAGES = XTB_LANGUAGES + ["en"]

@@ -1,0 +1,131 @@
+{% comment %}
+Copyright 2012 Google Inc.  All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License.  You may obtain a copy
+of the License at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distrib-
+uted under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied.  See the License for
+specific language governing permissions and limitations under the License.
+{% endcomment %}
+
+<script src="{{root}}/.static/popups.js"></script>
+<div class="cm-popup" id="create-popup" style="display:none">
+  <h2>Acceptable use</h2>
+  <form method="post" action="{{root}}/.create" id="create-popup-form">
+    {{xsrf_tag|safe}}
+    <input type="hidden" name="domain" id="create-popup-domain">
+    <div class="cm-section">
+      <div class="cm-p">
+        <b>Heads up!</b> You are about to create a new map.
+        Before you can make maps, you must read and accept the
+        <a href="http://www.google.org/crisisresponse/crisismap/use-policy.html"
+            target="_blank">Acceptable Use Policy</a>
+        and agree to one of the following:
+      </div>
+      <div class="cm-p">
+        <label>
+          <span class="cm-checkbox-area">
+            <input type=checkbox name="acceptable_purpose"
+                id="acceptable-purpose">
+          </span>
+          I am creating a map for crisis, humanitarian, social good,
+          or testing purposes.
+        </label>
+      </div>
+      <div class="cm-p">
+        <label>
+          <span class="cm-checkbox-area">
+            <input type=checkbox name="acceptable_org" id="acceptable-org">
+          </span>
+          I am acting on behalf of a U.S. 501(c)(3) or
+          a non-profit organization outside the U.S.
+        </label>
+        <div id="organization-name">
+          <span class="cm-checkbox-area"></span>
+          <input type="text" size=50 name="organization" id="organization-input"
+              placeholder="Required: Enter the name of your organization">
+        </div>
+      </div>
+      <div class="cm-p">
+        Note: Google reserves the right to take down maps
+        that violate the Acceptable Use Policy.
+        For situations not addressed above, please
+        <a href="https://docs.google.com/forms/d/1bJTGaQ_gZUOrlF48WtOWR7rBlaeADRSosCuUWa5Etek/viewform" target="_blank">apply for permission</a>.
+      </div>
+    </div>
+    {% if not user.marketing_consent_answered %}
+      <div class="cm-section">
+        May we contact you to suggest other mapping or crisis tools?
+        <div class="cm-p">
+          <label>
+            <span class="cm-checkbox-area">
+              <input type=checkbox name="marketing_consent" checked>
+            </span>
+            Yes, I'd like to receive e-mail about related products and services.
+          </label>
+        </div>
+      </div>
+    {% endif %}
+    <div class="cm-button-area">
+      <input type="submit" class="cm-submit cm-button" value="Continue"
+          id="create-popup-submit" onclick="submitCreatePopup()">
+      <input type="button" class="cm-button" value="Cancel"
+          onclick="hide($('create-popup'))">
+    </div>
+  </form>
+</div>
+
+<div class="cm-popup" id="create-domain-popup" style="display:none">
+  <h2>Setting up {{user.ga_domain}}</h2>
+  <div class="cm-section">
+    <div class="cm-p">
+      It looks like no one has set up <b>{{user.ga_domain}}</b> in Google
+      Crisis Map yet. Google Crisis Map organizes maps under <b>domains</b>
+      to allow for easy collaboration with your colleagues. You are signed in
+      as <b>{{user.email}}</b>, so your domain is <b>{{user.ga_domain}}</b>;
+      to create a map, you need to first set up that domain.
+    </div>
+    <div class="cm-p">
+      You can set up {{user.ga_domain}} now or switch to a different account.
+      (Domain setup is not required for gmail.com accounts.)
+    </div>
+  </div>
+  <div class="cm-button-area">
+    <input type="submit" class="cm-submit cm-button"
+        value="Set up {{user.ga_domain}}"
+        onclick="$('create-domain-form').submit()">
+    <a href="{{logout_url}}">
+      <input type="button" class="cm-button"
+          value="Log out and switch to another account">
+    </a>
+  </div>
+</div>
+
+<div class="cm-popup" id="cannot-create-map-popup" style="display:none">
+  <h2>Not permitted to create maps in {{user.email_domain}}</h2>
+  <div class="cm-section">
+    <div class="cm-p">
+      Google Crisis Map organizes maps under <b>domains</b>
+      to allow for easy collaboration with your colleagues.
+      You are signed in as <b>{{user.email}}</b>,
+      but you don't have permission to create maps in the domain
+      <b>{{user.email_domain}}</b>.
+    </div>
+    <div class="cm-p">
+      You can ask any domain administrator to grant you permission,
+      or switch to a different account.
+      (All gmail.com accounts can create maps.)
+    </div>
+  </div>
+  <div class="cm-button-area">
+    <input type="button" class="cm-submit cm-button" value="OK"
+      onclick="hide($('cannot-create-map-popup'))">
+    <a href="{{logout_url}}">
+      <input type="button" class="cm-button"
+          value="Log out and switch to another account">
+    </a>
+  </div>
+</div>

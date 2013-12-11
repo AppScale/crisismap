@@ -1,0 +1,59 @@
+{% extends "base.html" %} {# Django wants this first, even before comments #}
+
+{% comment %}
+Copyright 2012 Google Inc.  All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License.  You may obtain a copy
+of the License at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distrib-
+uted under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied.  See the License for
+specific language governing permissions and limitations under the License.
+{% endcomment %}
+
+{% block content %}
+  <script src="{{root}}/.static/dates.js"></script>
+  <form method="post">
+    {{xsrf_tag|safe}}
+    <table class="cm-map-list" summary="The list of catalog entries visible to you.">
+      <tr>
+        <th colspan=5 class="cm-map-list-header">
+          Published maps for {{domain}}
+        </th>
+      </tr>
+      <tr class="cm-admin-map-row">
+        <th class="cm-catalog-entry-enabled">In menu</th>
+        <th class="cm-catalog-entry-label">Label</th>
+        <th class="cm-catalog-entry-path">URL path</th>
+        <th>Title</th>
+        <th>Published</th>
+      </tr>
+      {% for e in entries %}
+      <tr>
+        <td><input type="checkbox" name="{{e.label}}" value="True"
+                   {{e.is_listed|yesno:"checked,"}}></td>
+        <td>{{e.label}}</td>
+        <td>
+          <a href="{{root}}/{{e.domain}}/{{e.label}}">
+            {{e.domain}}/{{e.label}}
+          </a>
+        </td>
+        <td>{{e.title}}</td>
+        <td>
+          <span class="cm-date cm-date-template" title="First&#160;published&#160;[[long_date {{e.created|date:"U"}}]]&#160;by&#160;{{e.creator.email}}&#10;Last&#160;published&#160;[[long_date {{e.updated|date:"U"}}]]&#160;by&#160;{{e.updater.email}}">[[short_date {{e.updated|date:"U"}}]]</span>
+          <span class="cm-email">
+            {% if e.updater.email_domain == user.email_domain %}
+              {{e.updater.email_username}}
+            {% else %}
+              {{e.updater.email}}
+            {% endif %}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <p><input class="cm-button cm-submit" type="submit" value="Save changes">
+  </form>
+{% endblock content %}

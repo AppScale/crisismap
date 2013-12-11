@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% comment %}
+Copyright 2012 Google Inc.  All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License.  You may obtain a copy
+of the License at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distrib-
+uted under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied.  See the License for
+specific language governing permissions and limitations under the License.
+{% endcomment %}
+
+{% block content %}
+<h3 class="cm-perms-subheading">Domain settings for {{domain.name}}</h3>
+<div class="cm-perms-domain-settings">
+  <form method="post">
+    {{xsrf_tag|safe}}
+    <input type="hidden" name="form" value="domain-settings">
+    <div class="cm-perms-setting">
+      <span class="cm-perms-setting-label">Default published map:</span>
+      <span class="cm-perms-setting-value">
+        <select name='default_label'>
+          {% if domain.default_label not in labels and domain.default_label != 'empty' %}
+            <option value="{{domain.default_label}}" selected>
+              {{domain.default_label}} (does not exist)
+             </option>
+          {% endif %}
+          {% for label in labels %}
+            <option value="{{label}}"
+                {% if label == domain.default_label %}selected{% endif %}>
+              {{label}}
+            </option>
+          {% endfor %}
+          {% if 'empty' not in labels %}
+            <option disabled>
+            <option value="empty"
+                {% if domain.default_label == 'empty' %}selected{% endif %}>
+              &lt;None&gt;
+            </option>
+          {% endif %}
+        </select>
+      </span>
+    </div>
+    <div class="cm-perms-setting">
+      <span class="cm-perms-setting-label">
+        When a new map is created, all members below:
+      </span>
+      <span class="cm-perms-setting-value">
+        <select name="initial_domain_role">
+          {% for choice in initial_domain_role_choices %}
+            <option value={{choice.0}}
+                {% if domain.initial_domain_role == choice.0 %}selected{% endif %}>
+              {{choice.1}}
+            </option>
+          {% endfor %}
+        </select>
+      </span>
+    </div>
+    <div class="cm-button-area">
+      <input type="submit" value="Save settings" class="cm-button cm-submit">
+    </div>
+  </form>
+</div>
+
+<h3 class="cm-perms-subheading">Members of {{domain.name}}</h3>
+<div class="cm-perms-user-settings">
+  <form method="post">
+    {{xsrf_tag|safe}}
+    <input type="hidden" name="form" value="user-permissions">
+    <table title="Users">
+      <tr>
+        <th class="cm-perms-subject" scope="col">E-mail address</th>
+        <th class="cm-perms-role" scope="col">Permission</th>
+        <th class="cm-perms-delete" scope="col">Delete</th>
+      </tr>
+      <tr class="cm-perms-domain-wide">
+        <td class="cm-perms-subject">
+          <span class="cm-wildcard">(everyone)</span>@{{domain.name}}
+        </td>
+        <td class="cm-perms-role">
+          <select name="domain_role">
+            <option value="NO_PERMISSIONS"
+                {% if not domain_role %}selected{% endif %}>
+              No default permissions
+            </option>
+            {% for choice in user_permission_choices %}
+              <option value="{{choice.0}}"
+                  {% if choice.0 == domain_role %}selected{% endif %}>
+                {{choice.1}}
+              </option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      {% for user_role in user_roles %}
+        <tr>
+          <td class="cm-perms-subject">{{user_role.0.email}}</td>
+          <td class="cm-perms-role">
+            <select name="{{user_role.0.id}}.permission">
+              {% for choice in user_permission_choices %}
+                <option value="{{choice.0}}"
+                    {% if choice.0 == user_role.1 %}selected{% endif %}>
+                  {{choice.1}}
+                </option>
+              {% endfor %}
+            </select>
+          </td>
+          <td class="cm-perms-delete">
+            <input type="checkbox" name="{{user_role.0.id}}.delete">
+          </td>
+        </tr>
+      {% endfor %}
+      <tr class="cm-perms-new-user">
+        <td class="cm-perms-subject">
+          <input name="new_user" type="text" placeholder="Add a new member">
+        </td>
+        <td class="cm-perms-role">
+          <select name="new_user.permission">
+            {% for choice in user_permission_choices %}
+              <option value="{{choice.0}}">{{choice.1}}</option>
+            {% endfor %}
+          </select>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+    <div class="cm-button-area">
+      <input type="submit" value="Save changes" class="cm-button cm-submit">
+    </div>
+  </form>
+</div>
+
+{% if show_welcome %}
+{# TODO(rew): This is largely cribbed from welcome.html; generalize that #}
+{# template and include it here instead. #}
+<div class="cm-popup" id="domain-welcome-popup" style="display:none">
+  <h2>Domain administration</h2>
+  <form method="post" action="javascript:void(0);">
+    {{xsrf_tag|safe}}
+    <div class="cm-section">
+      <div class="cm-p">
+        Google Crisis Map organizes maps under domains that identify the
+        organization publishing them.  Your domain is <b>{{domain.name}}</b>.
+        From here, you can set various defaults for your domain,
+        add new users, and manage the permissions those users have.
+      </div>
+      <div class="cm-p">
+        <b>You are now the administrator for {{domain.name}}</b>,
+        which gives you access to this page.  You can add other
+        administrators, but a domain should always have at least one
+        administrator.
+      </div>
+    </div>
+    <div class="cm-button-area">
+      <input type="submit" class="cm-submit cm-button" value="OK"
+             onclick="hide($('domain-welcome-popup'))">
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="{{root}}/.static/popups.js"></script>
+<script>showPopup($('domain-welcome-popup'))</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,159 @@
+{% comment %}
+Copyright 2012 Google Inc.  All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License.  You may obtain a copy
+of the License at: http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distrib-
+uted under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied.  See the License for
+specific language governing permissions and limitations under the License.
+{% endcomment %}
+
+{# Base template for app pages #}
+{% load i18n %}
+<!DOCTYPE html> {# activates Strict mode in most browsers including IE8 #}
+
+<head>
+  <title>Google Crisis Map</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta itemprop="image" content="{{root}}/.static/favicon.ico">
+  <meta name="viewport" content="maximum-scale=1.0,initial-scale=0.7">
+  {# Links to stylesheets #}
+  {% block stylesheets %}
+    <link rel="stylesheet" href="{{root}}/.static/mapviewer.css">
+    <link rel="stylesheet" href="{{root}}/.static/admin.css">
+  {% endblock stylesheets %}
+</head>
+
+<body class="cm-body">
+  <div class="cm-userbar">
+    {% if user %}
+      {% if user.ga_domain %}
+        {{user.email_username}}@<b>{{user.ga_domain}}</b>
+      {% else %}
+        {{user.email}}
+      {% endif %}
+      &#xb7;
+      <a href="{{logout_url}}">Sign out</a>
+    {% else %}
+      <a href="{{login_url}}">Sign in</a>
+    {% endif %}
+    &#xb7;
+    <a href="{{root}}/.prefs">Preferences</a>
+    &#xb7;
+    <a href="https://docs.google.com/spreadsheet/embeddedform?formkey=dEJLVXhkbGNobWNNTnUzRGZGQ2tJbXc6MQ"
+        target="_blank"
+        title="Send us your suggestions and problem reports.">Feedback</a>
+  </div>
+  <div class="cm-header">
+    {# Header above page content #}
+    {% block header %}
+      <h1><a href="{{root}}/.maps">Google Crisis Map <sup>BETA</sup></a></h1>
+    {% endblock header %}
+  </div>
+
+  <div class="cm-navbar">
+    {# Left sidebar #}
+    {% block navbar %}
+    {% include "create.html" %}
+    <div class="cm-button-area">
+      {% if navbar.creator_domains %}
+        {% if navbar.creator_domains|length > 1 %}
+          <div class="cm-domain-select">
+            <select id="domain">
+              {% for domain in navbar.creator_domains %}
+                <option value="{{domain}}"
+                  {% if domain == user.email_domain %} selected {% endif %}
+                >{{domain}}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% else %}
+          <input type="hidden" id="domain"
+              value="{{navbar.creator_domains.0}}">
+        {% endif %}
+        <input type="button" class="cm-create cm-button"
+            title="Create a new map" value="Create map"
+            onclick="showCreatePopup()">
+      {% else %}
+        <input type="button" class="cm-create cm-button"
+            title="Create a new map" value="Create map"
+            onclick={% if user.ga_domain and not navbar.domain_exists %}
+                      "showPopup($('create-domain-popup'))"
+                    {% else %}
+                      {% comment %}
+                        This message covers both cases:
+                        (a) Domain exists but user lacks MAP_CREATOR
+                        (b) User account is not a Google Apps account
+                      {% endcomment %}
+                      "showPopup($('cannot-create-map-popup'))"
+                    {% endif %}
+        >
+      {% endif %}
+    </div>
+    <ul>
+      {# Navigation links #}
+      {% block navlinks %}
+        <li><a href="{{root}}/.maps">Your list of maps</a></li>
+
+        {% if navbar.catalog_domains %}
+          <li>Published maps:</li>
+          {% for catalog_domain in navbar.catalog_domains %}
+            <li>&nbsp;&nbsp;&nbsp;
+              <a href="{{root}}/{{catalog_domain}}/.catalog">
+                {{catalog_domain}}
+              </a>
+            </li>
+          {% endfor %}
+        {% endif %}
+
+        {% if user.ga_domain and not navbar.domain_exists %}
+          <li>
+            <form id="create-domain-form" method="post"
+                  action="{{root}}/{{user.ga_domain}}/.admin">
+              {{xsrf_tag|safe}}
+              <input type="hidden" name="form" value="create-domain">
+              <a href="#" onclick="this.parentNode.submit()">
+                Set up {{user.ga_domain}}
+              </a>
+            </form>
+          </li>
+        {% endif %}
+
+        {% for admin_domain in navbar.admin_domains %}
+          <li><a href="{{root}}/{{admin_domain}}/.admin">
+            Manage {{admin_domain}}
+          </a></li>
+        {% endfor %}
+
+        {% if navbar.is_admin %}
+          <li><a href="{{root}}/.admin">Administer maps</a></li>
+        {% endif %}
+
+        <li>&nbsp;</li>
+
+        <li><a href="http://www.google.com/intl/en/policies/">
+          Privacy &amp; terms
+        </a></li>
+
+        <li><a href="http://www.google.org/crisisresponse/crisismap/use-policy.html">
+          Acceptable use policy
+        </a></li>
+
+      {% endblock navlinks %}
+    </ul>
+    {% endblock navbar %}
+  </div>
+
+  {# Page content #}
+  <div class="cm-content">
+    {% block content %}
+    {% endblock content %}
+  </div>
+
+  {# Footer at the bottom of every page #}
+  {% block footer %}
+  {% endblock footer %}
+</body>
